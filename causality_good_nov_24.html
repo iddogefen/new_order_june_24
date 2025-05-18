@@ -467,6 +467,8 @@ stimulusTypes.forEach(stimulus_type => {
   });
 });
 
+// Log which blocks were loaded
+console.log("Stimulus blocks loaded:", loadedBlocks);
 // Shuffle all trials
 let shuffledTrials = jsPsych.randomization.shuffle(allTrials);
 
