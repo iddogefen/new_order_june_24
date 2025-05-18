@@ -430,6 +430,9 @@ function generateRandomizedPairs(start, end) {
 // Generate and store all trials
 let allTrials = [];
 
+let loadedBlocks = [];
+
+
 stimulusTypes.forEach(stimulus_type => {
   const pairs = generateRandomizedPairs(1, 10);
   pairs.forEach(pair => {
