@@ -163,7 +163,7 @@
         'images/causal/cat_care_semantic/cat_care_semantic_8.png',
         'images/causal/cat_care_semantic/cat_care_semantic_9.png',
         'images/causal/cat_care_semantic/cat_care_semantic_10.png',
-        'images/causal/creative_activities_semantic/creative_activities_semantic_1.png',
+        'images/causal/creative_activities_semantic/using_technology_semantic.png',
         'images/causal/creative_activities_semantic/creative_activities_semantic_2.png',
         'images/causal/creative_activities_semantic/creative_activities_semantic_3.png',
         'images/causal/creative_activities_semantic/creative_activities_semantic_4.png',
@@ -183,6 +183,26 @@
         'images/causal/physical_activity_semantic/physical_activity_semantic_8.png',
         'images/causal/physical_activity_semantic/physical_activity_semantic_9.png',
         'images/causal/physical_activity_semantic/physical_activity_semantic_10.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_1.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_2.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_3.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_4.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_5.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_6.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_7.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_8.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_9.png',
+        'images/causal/using_technology_semantic/using_technology_semantic_10.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_1.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_2.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_3.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_4.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_5.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_6.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_7.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_8.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_9.png',
+        'images/causal/visiting_cities_semantic/visiting_cities_semantic_10.png',
       ]
     };
 
@@ -371,132 +391,79 @@
 
 
 
-    // Generate all unique pairs for the causal images with random order
-function generateRandomizedPairs(rangeStart, rangeEnd) {
+// Define the list of all stimulus block folder names
+const stimulusTypes = [
+  'cat_care_semantic',
+  'creative_activities_semantic',
+  'exploring_nature_semantic',
+  'using_technology_semantic',
+  'kitchen_operations_semantic',
+  'maintaining_a_car_semantic',
+  'market_semantic',
+  'self_care_activities_semantic',
+  'traveling_semantic',
+  'restaurant_scheme',
+  'interview_scheme',
+  'flight_scheme',
+  'dinner_party_scheme',
+  'hotel_scheme',
+  'supermarket_scheme',
+  'coin_causal',
+  'dog_causal',
+  'museum_causal',
+  'package_causal',
+  'saving_a_cat_causal',
+  'the_performance_causal'
+];
+
+// Function to generate all possible ordered pairs from 1 to 10, with random direction
+function generateRandomizedPairs(start, end) {
   let pairs = [];
-  for (let i = rangeStart; i <= rangeEnd; i++) {
-    for (let j = i + 1; j <= rangeEnd; j++) {
-      if (Math.random() > 0.5) {
-        pairs.push([i, j]); // Keep the original order
-      } else {
-        pairs.push([j, i]); // Reverse the order
-      }
+  for (let i = start; i <= end; i++) {
+    for (let j = i + 1; j <= end; j++) {
+      pairs.push(Math.random() > 0.5 ? [i, j] : [j, i]);
     }
   }
   return pairs;
 }
 
- // Initialize an empty array to store all trials
+// Generate and store all trials
 let allTrials = [];
 
-// Generate trials for physical_activity_semantic
-let physicalPairs = generateRandomizedPairs(1, 10);
-physicalPairs.forEach(pair => {
-  // Main trial
-  allTrials.push({
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <div style="text-align: center; margin-right: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 1</p>
-          <img src="images/causal/cat_care_semantic/cat_care_semantic_${pair[0]}.png" style="width: 300px; height: auto;">
+stimulusTypes.forEach(stimulus_type => {
+  const pairs = generateRandomizedPairs(1, 10);
+  pairs.forEach(pair => {
+    allTrials.push({
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <div style="text-align: center; margin-right: 20px;">
+            <p style="font-size: 24px; font-weight: bold;">Event 1</p>
+            <img src="images/causal/${stimulus_type}/${stimulus_type}_${pair[0]}.png" style="width: 300px; height: auto;">
+          </div>
+          <div style="text-align: center; margin-left: 20px;">
+            <p style="font-size: 24px; font-weight: bold;">Event 2</p>
+            <img src="images/causal/${stimulus_type}/${stimulus_type}_${pair[1]}.png" style="width: 300px; height: auto;">
+          </div>
         </div>
-        <div style="text-align: center; margin-left: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 2</p>
-          <img src="images/causal/cat_care_semantic/cat_care_semantic_${pair[1]}.png" style="width: 300px; height: auto;">
-        </div>
-      </div>
-      <p style="text-align: center; margin-top: 20px;">Did one event cause the other?</p>`,
-    choices: ['event 1 causes event 2', 'event 2 causes event 1', 'events are unrelated'],
-    trial_duration: 60000,
-    button_html: '<button class="jspsych-btn" disabled>%choice%</button>',
-    on_load: function () {
-      setTimeout(() => {
-        document.querySelectorAll('.jspsych-btn').forEach(button => {
-          button.disabled = false;
-        });
-      }, 5000);
-    },
-    on_finish: function (data) {
-      data.firstImageNumber = pair[0];
-      data.secondImageNumber = pair[1];
-      data.response_made = typeof data.response !== 'undefined';
-      data.stimulus_type = 'cat_care_semantic';
-    }
-  });
-});
-
-// Generate trials for dog_causal
-let dogPairs = generateRandomizedPairs(1, 10);
-dogPairs.forEach(pair => {
-  // Main trial
-  allTrials.push({
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <div style="text-align: center; margin-right: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 1</p>
-          <img src="images/causal/restaurant_scheme/restaurant_scheme_${pair[0]}.png" style="width: 300px; height: auto;">
-        </div>
-        <div style="text-align: center; margin-left: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 2</p>
-          <img src="images/causal/restaurant_scheme/restaurant_scheme_${pair[1]}.png" style="width: 300px; height: auto;">
-        </div>
-      </div>
-      <p style="text-align: center; margin-top: 20px;">Did one event cause the other?</p>`,
-    choices: ['event 1 causes event 2', 'event 2 causes event 1', 'events are unrelated'],
-    trial_duration: 60000,
-    button_html: '<button class="jspsych-btn" disabled>%choice%</button>',
-    on_load: function () {
-      setTimeout(() => {
-        document.querySelectorAll('.jspsych-btn').forEach(button => {
-          button.disabled = false;
-        });
-      }, 5000);
-    },
-    on_finish: function (data) {
-      data.firstImageNumber = pair[0];
-      data.secondImageNumber = pair[1];
-      data.response_made = typeof data.response !== 'undefined';
-      data.stimulus_type = 'restaurant_scheme';
-    }
-  });
-});
-
-// Generate trials for package_causal
-let packagePairs = generateRandomizedPairs(1, 10);
-packagePairs.forEach(pair => {
-  // Main trial
-  allTrials.push({
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <div style="text-align: center; margin-right: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 1<p>
-          <img src="images/causal/coin_causal/coin_causal_${pair[0]}.png" style="width: 300px; height: auto;">
-        </div>
-        <div style="text-align: center; margin-left: 20px;">
-          <p style="font-size: 24px; font-weight: bold;">Event 2</p>
-          <img src="images/causal/coin_causal/coin_causal_${pair[1]}.png" style="width: 300px; height: auto;">
-        </div>
-      </div>
-      <p style="text-align: center; margin-top: 20px;">Did one event cause the other?</p>`,
-    choices: ['event 1 causes event 2', 'event 2 causes event 1', 'events are unrelated'],
-    trial_duration: 60000,
-    button_html: '<button class="jspsych-btn" disabled>%choice%</button>',
-    on_load: function () {
-      setTimeout(() => {
-        document.querySelectorAll('.jspsych-btn').forEach(button => {
-          button.disabled = false;
-        });
-      }, 5000);
-    },
-    on_finish: function (data) {
-      data.firstImageNumber = pair[0];
-      data.secondImageNumber = pair[1];
-      data.response_made = typeof data.response !== 'undefined';
-      data.stimulus_type = 'coin_causal';
-    }
+        <p style="text-align: center; margin-top: 20px;">Did one event cause the other?</p>`,
+      choices: ['event 1 causes event 2', 'event 2 causes event 1', 'events are unrelated'],
+      trial_duration: 60000,
+      button_html: '<button class="jspsych-btn" disabled>%choice%</button>',
+      on_load: function () {
+        setTimeout(() => {
+          document.querySelectorAll('.jspsych-btn').forEach(button => {
+            button.disabled = false;
+          });
+        }, 5000);
+      },
+      on_finish: function (data) {
+        data.firstImageNumber = pair[0];
+        data.secondImageNumber = pair[1];
+        data.response_made = typeof data.response !== 'undefined';
+        data.stimulus_type = stimulus_type;
+      }
+    });
   });
 });
 
@@ -505,7 +472,6 @@ let shuffledTrials = jsPsych.randomization.shuffle(allTrials);
 
 // Add the shuffled trials to the timeline
 timeline.push(...shuffledTrials);
-
 
 
 
