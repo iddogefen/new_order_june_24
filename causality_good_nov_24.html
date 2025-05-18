@@ -430,23 +430,26 @@ function generateRandomizedPairs(start, end) {
 // Generate and store all trials
 let allTrials = [];
 
+// Track order of added blocks
 let loadedBlocks = [];
-
 
 stimulusTypes.forEach(stimulus_type => {
   const pairs = generateRandomizedPairs(1, 10);
+  loadedBlocks.push(stimulus_type); // Keep track of what was loaded
   pairs.forEach(pair => {
+    const image1 = pair[0] === 10 ? 'ten' : pair[0];
+    const image2 = pair[1] === 10 ? 'ten' : pair[1];
     allTrials.push({
       type: jsPsychHtmlButtonResponse,
       stimulus: `
         <div style="display: flex; justify-content: center; align-items: center;">
           <div style="text-align: center; margin-right: 20px;">
             <p style="font-size: 24px; font-weight: bold;">Event 1</p>
-            <img src="images/causal/${stimulus_type}/${stimulus_type}_${pair[0]}.png" style="width: 300px; height: auto;">
+            <img src="images/causal/${stimulus_type}/${stimulus_type}_${image1}.png" style="width: 300px; height: auto;">
           </div>
           <div style="text-align: center; margin-left: 20px;">
             <p style="font-size: 24px; font-weight: bold;">Event 2</p>
-            <img src="images/causal/${stimulus_type}/${stimulus_type}_${pair[1]}.png" style="width: 300px; height: auto;">
+            <img src="images/causal/${stimulus_type}/${stimulus_type}_${image2}.png" style="width: 300px; height: auto;">
           </div>
         </div>
         <p style="text-align: center; margin-top: 20px;">Did one event cause the other?</p>`,
@@ -472,6 +475,7 @@ stimulusTypes.forEach(stimulus_type => {
 
 // Log which blocks were loaded
 console.log("Stimulus blocks loaded:", loadedBlocks);
+
 // Shuffle all trials
 let shuffledTrials = jsPsych.randomization.shuffle(allTrials);
 
